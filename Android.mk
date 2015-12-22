@@ -60,6 +60,8 @@ endif
 
 LOCAL_MODULE := libjpeg_static
 
+LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)
+
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -80,6 +82,8 @@ else
 # unbundled branch, built against NDK.
 LOCAL_SDK_VERSION := 17
 endif
+
+LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)
 
 include $(BUILD_SHARED_LIBRARY)
 
