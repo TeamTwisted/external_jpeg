@@ -15,9 +15,6 @@ LOCAL_SRC_FILES := \
 
 LOCAL_SRC_FILES_arm += armv6_idct.S
 
-# jsimd_arm_neon.S does not compile with clang.
-LOCAL_CLANG_ASFLAGS_arm += -no-integrated-as
-
 ifneq (,$(TARGET_BUILD_APPS))
 # unbundled branch, built against NDK.
 LOCAL_SDK_VERSION := 17
@@ -36,11 +33,15 @@ ifeq ($(TARGET_ARCH),x86)
   LOCAL_SRC_FILES += jidctintelsse.c
 endif
 
-ifneq (, $(filter arm, $(strip $(TARGET_ARCH)) $(strip $(TARGET_2ND_ARCH))))
+LOCAL_SRC_FILES_arm64 += \
+        jsimd_arm64_neon.S \
+        jsimd_neon.c
+
+ifeq ($(strip $(TARGET_ARCH)),arm)
   ifeq ($(ARCH_ARM_HAVE_NEON),true)
     #use NEON accelerations
-    LOCAL_CFLAGS_arm += -DNV_ARM_NEON -D__ARM_HAVE_NEON
-    LOCAL_SRC_FILES_arm += \
+    LOCAL_CFLAGS += -DNV_ARM_NEON -D__ARM_HAVE_NEON
+    LOCAL_SRC_FILES += \
         jsimd_arm_neon.S \
         jsimd_neon.c
   else
